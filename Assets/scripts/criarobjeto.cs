@@ -70,7 +70,7 @@ public class criarobjeto : MonoBehaviour
 //7
     public void Criarlivro()
     {
-        if(investimentos.investimentoEducaçãoFinal > 5)
+        if(investimentos.investimentoEducacaoFinal > 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
