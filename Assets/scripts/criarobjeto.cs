@@ -61,7 +61,7 @@ public class criarobjeto : MonoBehaviour
 //6
     public void Criartablet()
     {
-        if(investimentos.investimentoTecnologiaFinal >= 0)
+        if(investimentos.investimentoTecnologiaFinal > 10)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
@@ -70,7 +70,7 @@ public class criarobjeto : MonoBehaviour
 //7
     public void Criarlivro()
     {
-        if(investimentos.investimentoEducacaoFinal >= 0)
+        if(investimentos.investimentoEducaçãoFinal > 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
@@ -97,7 +97,7 @@ public class criarobjeto : MonoBehaviour
 //10
     public void Criarmesafut()
     {
-        if(investimentos.investimentoInfraestruturaFinal >= 0)
+        if(investimentos.investimentoInfraestruturaFinal > 10)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
