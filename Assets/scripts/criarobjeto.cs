@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class criarobjeto : MonoBehaviour
+public class Criarobjeto : MonoBehaviour
 {
     public GameObject objetoPrefab;
     public Vector3 pos = new Vector3(0, 0.5f, 0);
     public Vector3 rot = new Vector3(-90, 0, 0);
     public Investimentos investimentos;
+    public Armazenarboolobjeto armazenarboolobjeto;
 //1
     public void Criarpuff()
     {
@@ -15,6 +16,7 @@ public class criarobjeto : MonoBehaviour
         {
             
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            armazenarboolobjeto.puffCriado = true;
         }
         
     }
@@ -26,6 +28,7 @@ public class criarobjeto : MonoBehaviour
             rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             rot.x = -90;
+            armazenarboolobjeto.cadeiraCriado = true;
         }
         
     }
@@ -35,6 +38,7 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoInfraestruturaFinal >= 5 && investimentos.investimentoEducacaoFinal >= 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            armazenarboolobjeto.mesaCriado = true;
         }
         
     }
@@ -43,9 +47,10 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 5 && investimentos.investimentoTecnologiaFinal >=5)
         {
-            pos.y = 2;
+            pos.y = 3f;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             pos.y = 0;
+            armazenarboolobjeto.ventiladorCriado = true;
         }
        
     }
@@ -54,11 +59,12 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoTecnologiaFinal >= 10)
         {
-            pos.y = 1.5f;
+            pos.y = 3f;
             rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             rot.x = -90;
             pos.y = 0;
+            armazenarboolobjeto.arcondicionadoCriado = true;
         }
         
     }
@@ -68,6 +74,7 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoTecnologiaFinal >= 10)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            armazenarboolobjeto.tabletCriado = true;
         }
         
     }
@@ -77,6 +84,7 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoEducacaoFinal >= 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            armazenarboolobjeto.livroCriado = true;
         }
         
     }
@@ -90,6 +98,7 @@ public class criarobjeto : MonoBehaviour
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             rot.x = -90;
             pos.y = 0;
+            armazenarboolobjeto.quadroCriado = true;
         }
         
     }
@@ -103,6 +112,7 @@ public class criarobjeto : MonoBehaviour
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             rot.x = -90;
             pos.y = 0;
+            armazenarboolobjeto.televisaoCriado = true;
         }
         
     }
@@ -111,7 +121,9 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoEducacaoFinal >= 10)
         {
+            rot = new Vector3(-50, -90, 90);
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            armazenarboolobjeto.mesafutCriado = true;
         }
         
     }

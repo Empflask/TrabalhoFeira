@@ -138,6 +138,14 @@ public class moverobjeto : MonoBehaviour
         selectObject = obj;
         draggingObject = obj;
         hoverObject = null;
+        if (IsQuadro(obj))
+        {
+            Vector3 position = obj.transform.position;
+            position.z = GetZPermitidoDoQuadro(position.z);
+            obj.transform.position = position;
+            Physics.SyncTransforms();
+        }
+
         dragStartPosition = obj.transform.position;
         dragStartRotation = obj.transform.rotation;
         dragPlane = new Plane(Vector3.up, dragStartPosition);
@@ -172,11 +180,32 @@ public class moverobjeto : MonoBehaviour
         int step = Mathf.Max(1, passoMovimento);
         Vector3 position = dragStartPosition;
         position.x += Mathf.Round((currentPoint.x - dragStartPoint.x) / step) * step;
-        position.z += Mathf.Round((currentPoint.z - dragStartPoint.z) / step) * step;
+        float deltaZ = currentPoint.z - dragStartPoint.z;
+        if (IsQuadro(draggingObject))
+        {
+            position.z = GetZPermitidoDoQuadro(dragStartPosition.z + deltaZ);
+        }
+        else
+        {
+            position.z += Mathf.Round(deltaZ / step) * step;
+            position.z = Mathf.Clamp(position.z, Mathf.Min(limiteZ.x, limiteZ.y), Mathf.Max(limiteZ.x, limiteZ.y));
+        }
+
         position.x = Mathf.Clamp(position.x, Mathf.Min(limiteX.x, limiteX.y), Mathf.Max(limiteX.x, limiteX.y));
-        position.z = Mathf.Clamp(position.z, Mathf.Min(limiteZ.x, limiteZ.y), Mathf.Max(limiteZ.x, limiteZ.y));
         draggingObject.transform.position = position;
         UpdateDraggedObjectVisuals();
+    }
+
+    private bool IsQuadro(GameObject obj)
+    {
+        return obj.name == "quadro" || obj.name == "quadro(Clone)";
+    }
+
+    private float GetZPermitidoDoQuadro(float z)
+    {
+        const float zFrente = 6f;
+        const float zFundo = -7.3f;
+        return Mathf.Abs(z - zFrente) <= Mathf.Abs(z - zFundo) ? zFrente : zFundo;
     }
 
     private void StopDragging()
