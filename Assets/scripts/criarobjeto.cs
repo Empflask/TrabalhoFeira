@@ -84,7 +84,9 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoEducacaoFinal >= 10)
         {
             pos.y = 1.5f;
+            rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            rot.x = -90;
             pos.y = 0;
         }
         
@@ -95,7 +97,9 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoTecnologiaFinal >= 15)
         {
             pos.y = 1.5f;
+            rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            rot.x = -90;
             pos.y = 0;
         }
         
