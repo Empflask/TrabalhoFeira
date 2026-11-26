@@ -23,7 +23,9 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 5)
         {
+            rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            rot.x = -90;
         }
         
     }
@@ -39,7 +41,7 @@ public class criarobjeto : MonoBehaviour
 //4
     public void Criarventilador()
     {
-        if(investimentos.investimentoInfraestruturaFinal >= 5)
+        if(investimentos.investimentoInfraestruturaFinal >= 5 && investimentos.investimentoTecnologiaFinal >=5)
         {
             pos.y = 2;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
@@ -52,7 +54,7 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoTecnologiaFinal >= 10)
         {
-            pos.y = 2;
+            pos.y = 1.5f;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
             pos.y = 0;
         }
@@ -61,7 +63,7 @@ public class criarobjeto : MonoBehaviour
 //6
     public void Criartablet()
     {
-        if(investimentos.investimentoTecnologiaFinal > 10)
+        if(investimentos.investimentoTecnologiaFinal >= 10)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
@@ -70,7 +72,7 @@ public class criarobjeto : MonoBehaviour
 //7
     public void Criarlivro()
     {
-        if(investimentos.investimentoEducacaoFinal > 5)
+        if(investimentos.investimentoEducacaoFinal >= 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
@@ -79,9 +81,11 @@ public class criarobjeto : MonoBehaviour
 //8
     public void Criarquadro()
     {
-        if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoEducacaoFinal >= 5)
+        if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoEducacaoFinal >= 10)
         {
+            pos.y = 1.5f;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            pos.y = 0;
         }
         
     }
@@ -90,14 +94,16 @@ public class criarobjeto : MonoBehaviour
     {
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoTecnologiaFinal >= 15)
         {
+            pos.y = 1.5f;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            pos.y = 0;
         }
         
     }
 //10
     public void Criarmesafut()
     {
-        if(investimentos.investimentoInfraestruturaFinal > 10)
+        if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoEducacaoFinal >= 10)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
