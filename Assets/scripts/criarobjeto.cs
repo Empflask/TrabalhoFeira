@@ -32,7 +32,7 @@ public class criarobjeto : MonoBehaviour
 //3
     public void Criarmesa()
     {
-        if(investimentos.investimentoInfraestruturaFinal >= 5)
+        if(investimentos.investimentoInfraestruturaFinal >= 5 && investimentos.investimentoEducacaoFinal >= 5)
         {
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
         }
@@ -55,7 +55,9 @@ public class criarobjeto : MonoBehaviour
         if(investimentos.investimentoInfraestruturaFinal >= 10 && investimentos.investimentoTecnologiaFinal >= 10)
         {
             pos.y = 1.5f;
+            rot.x = 0;
             Instantiate(objetoPrefab, pos, Quaternion.Euler(rot));
+            rot.x = -90;
             pos.y = 0;
         }
         
