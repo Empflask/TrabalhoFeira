@@ -20,6 +20,8 @@ public class moverobjeto : MonoBehaviour
     [Min(0.001f)]
     public float larguraContorno = 0.04f;
 
+    public GameObject BotoesObjetosMouse;
+
     private GameObject selectObject;
     private GameObject draggingObject;
     private GameObject hoverObject;
@@ -41,6 +43,9 @@ public class moverobjeto : MonoBehaviour
 
     private readonly Dictionary<GameObject, List<MaterialColorState>> materialStates =
         new Dictionary<GameObject, List<MaterialColorState>>();
+    private readonly Dictionary<GameObject, float> defaultYPositions =
+        new Dictionary<GameObject, float>();
+    private readonly List<Collider> mesaColliders = new List<Collider>();
 
     private class MaterialColorState
     {
@@ -117,6 +122,7 @@ public class moverobjeto : MonoBehaviour
 
         if (draggingObject != null)
         {
+            BotoesObjetosMouse.SetActive(true);
             if (Input.GetMouseButtonDown(1))
             {
                 RotateDraggedObject();
@@ -127,6 +133,7 @@ public class moverobjeto : MonoBehaviour
 
         if (draggingObject == null)
         {
+            BotoesObjetosMouse.SetActive(false);
             UpdateHover();
         }
     }
@@ -136,6 +143,7 @@ public class moverobjeto : MonoBehaviour
         GameObject objectToDelete = selectObject;
         RestoreObjectColor(objectToDelete);
         materialStates.Remove(objectToDelete);
+        defaultYPositions.Remove(objectToDelete);
 
         if (draggingObject == objectToDelete)
         {
@@ -170,10 +178,27 @@ public class moverobjeto : MonoBehaviour
         selectObject = obj;
         draggingObject = obj;
         hoverObject = null;
+        if (IsTabletOuLivro(obj))
+        {
+            if (!defaultYPositions.ContainsKey(obj))
+            {
+                defaultYPositions.Add(obj, obj.transform.position.y);
+            }
+
+            AtualizarCollidersDaMesa();
+        }
+
         if (IsQuadro(obj))
         {
             Vector3 position = obj.transform.position;
             position.z = GetZPermitidoDoQuadro(position.z);
+            obj.transform.position = position;
+            Physics.SyncTransforms();
+        }
+        else if (IsTelevisao(obj))
+        {
+            Vector3 position = obj.transform.position;
+            position.z = 6f;
             obj.transform.position = position;
             Physics.SyncTransforms();
         }
@@ -217,6 +242,10 @@ public class moverobjeto : MonoBehaviour
         {
             position.z = GetZPermitidoDoQuadro(dragStartPosition.z + deltaZ);
         }
+        else if (IsTelevisao(draggingObject))
+        {
+            position.z = 6f;
+        }
         else
         {
             position.z += Mathf.Round(deltaZ / step) * step;
@@ -224,13 +253,138 @@ public class moverobjeto : MonoBehaviour
         }
 
         position.x = Mathf.Clamp(position.x, Mathf.Min(limiteX.x, limiteX.y), Mathf.Max(limiteX.x, limiteX.y));
+        if (IsTabletOuLivro(draggingObject))
+        {
+            position.y = defaultYPositions[draggingObject];
+        }
+
         draggingObject.transform.position = position;
+        Physics.SyncTransforms();
+
+        if (IsTabletOuLivro(draggingObject) && TryGetAlturaDaMesa(out float alturaMesa))
+        {
+            float menorY = GetMenorYDosColliders(draggingObject);
+            position.y += alturaMesa - menorY;
+            draggingObject.transform.position = position;
+            Physics.SyncTransforms();
+        }
+
         UpdateDraggedObjectVisuals();
     }
 
     private bool IsQuadro(GameObject obj)
     {
         return obj.name == "quadro" || obj.name == "quadro(Clone)";
+    }
+
+    private bool IsTelevisao(GameObject obj)
+    {
+        return obj.name == "Televisao" || obj.name == "Televisao(Clone)";
+    }
+
+    private bool IsTabletOuLivro(GameObject obj)
+    {
+        return obj.name == "tablet" || obj.name == "tablet(Clone)" ||
+               obj.name == "Tablet" || obj.name == "Tablet(Clone)" ||
+               obj.name == "livro" || obj.name == "livro(Clone)" ||
+               obj.name == "Livro" || obj.name == "Livro(Clone)" ||
+               obj.name == "livros" || obj.name == "livros(Clone)";
+    }
+
+    private void AtualizarCollidersDaMesa()
+    {
+        mesaColliders.Clear();
+
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Objeto"))
+        {
+            if (!IsMesa(obj))
+            {
+                continue;
+            }
+
+            mesaColliders.AddRange(obj.GetComponentsInChildren<Collider>());
+        }
+    }
+
+    private bool IsMesa(GameObject obj)
+    {
+        return obj.name == "mesa" || obj.name == "mesa(Clone)";
+    }
+
+    private bool IsMesa(Collider collider)
+    {
+        Transform candidate = collider.transform;
+        while (candidate != null)
+        {
+            if (IsMesa(candidate.gameObject))
+            {
+                return true;
+            }
+
+            candidate = candidate.parent;
+        }
+
+        return false;
+    }
+
+    private bool TryGetAlturaDaMesa(out float alturaMesa)
+    {
+        Collider[] objectColliders = draggingObject.GetComponentsInChildren<Collider>();
+        alturaMesa = float.NegativeInfinity;
+        bool encontrouMesa = false;
+
+        foreach (Collider objectCollider in objectColliders)
+        {
+            if (!objectCollider.enabled || !objectCollider.gameObject.activeInHierarchy)
+            {
+                continue;
+            }
+
+            Bounds objectBounds = objectCollider.bounds;
+            foreach (Collider mesaCollider in mesaColliders)
+            {
+                if (!mesaCollider.enabled || !mesaCollider.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                Bounds mesaBounds = mesaCollider.bounds;
+                bool sobreposicaoHorizontal =
+                    objectBounds.min.x <= mesaBounds.max.x &&
+                    objectBounds.max.x >= mesaBounds.min.x &&
+                    objectBounds.min.z <= mesaBounds.max.z &&
+                    objectBounds.max.z >= mesaBounds.min.z;
+
+                if (sobreposicaoHorizontal && mesaBounds.max.y > alturaMesa)
+                {
+                    alturaMesa = mesaBounds.max.y;
+                    encontrouMesa = true;
+                }
+            }
+        }
+
+        if (encontrouMesa)
+        {
+            alturaMesa += 0.001f;
+        }
+
+        return encontrouMesa;
+    }
+
+    private float GetMenorYDosColliders(GameObject obj)
+    {
+        Collider[] objectColliders = obj.GetComponentsInChildren<Collider>();
+        float menorY = float.PositiveInfinity;
+
+        foreach (Collider objectCollider in objectColliders)
+        {
+            if (objectCollider.enabled && objectCollider.gameObject.activeInHierarchy)
+            {
+                menorY = Mathf.Min(menorY, objectCollider.bounds.min.y);
+            }
+        }
+
+        return menorY;
     }
 
     private float GetZPermitidoDoQuadro(float z)
@@ -293,7 +447,8 @@ public class moverobjeto : MonoBehaviour
                     !otherCollider.gameObject.activeInHierarchy ||
                     IsPartOfDraggedObject(otherCollider) ||
                     Physics.GetIgnoreLayerCollision(ownCollider.gameObject.layer, otherCollider.gameObject.layer) ||
-                    Physics.GetIgnoreCollision(ownCollider, otherCollider))
+                    Physics.GetIgnoreCollision(ownCollider, otherCollider) ||
+                    (IsTabletOuLivro(draggingObject) && IsMesa(otherCollider)))
                 {
                     continue;
                 }

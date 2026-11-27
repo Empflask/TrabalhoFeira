@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class movercamera : MonoBehaviour
+public class Movercamera : MonoBehaviour
 {
     private const int QuantidadePosicoes = 4;
 
@@ -16,7 +16,7 @@ public class movercamera : MonoBehaviour
 
     private int indiceAtual = -1;
 
-    private void Update()
+    public void Update()
     {
         if (Input.GetMouseButtonDown(2))
         {

@@ -113,7 +113,7 @@ public class Investimentos : MonoBehaviour
     }
     public void Update()
     {
-        quantidadeMaxInvestimentosText.text = "orçamento: " + quantidadeMaxInvestimentos;
+        quantidadeMaxInvestimentosText.text = "Orçamento: " + quantidadeMaxInvestimentos;
         investimentoInfraestruturaText.text =investimentoInfraestrutura + " ";
         investimentoEducacaoText.text = investimentoEducacao + " ";
         investimentoTecnologiaText.text = investimentoTecnologia + " ";
