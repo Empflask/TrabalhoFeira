@@ -5,7 +5,7 @@ using UnityEngine;
 public class Criarobjeto : MonoBehaviour
 {
     public GameObject objetoPrefab;
-    public Vector3 pos = new Vector3(0, 0.5f, 0);
+    public Vector3 pos = new Vector3(0, 0, 0);
     public Vector3 rot = new Vector3(-90, 0, 0);
     public Investimentos investimentos;
     public Armazenarboolobjeto armazenarboolobjeto;

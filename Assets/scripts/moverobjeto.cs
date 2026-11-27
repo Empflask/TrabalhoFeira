@@ -97,6 +97,12 @@ public class moverobjeto : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space) && selectObject != null)
+        {
+            DeleteSelectedObject();
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             if (draggingObject != null)
@@ -123,6 +129,32 @@ public class moverobjeto : MonoBehaviour
         {
             UpdateHover();
         }
+    }
+
+    private void DeleteSelectedObject()
+    {
+        GameObject objectToDelete = selectObject;
+        RestoreObjectColor(objectToDelete);
+        materialStates.Remove(objectToDelete);
+
+        if (draggingObject == objectToDelete)
+        {
+            draggingObject = null;
+        }
+
+        if (hoverObject == objectToDelete)
+        {
+            hoverObject = null;
+        }
+
+        if (releasedObject == objectToDelete)
+        {
+            releasedObject = null;
+        }
+
+        selectObject = null;
+        ClearColliderOutline();
+        Destroy(objectToDelete);
     }
 
     private void StartDragging()
